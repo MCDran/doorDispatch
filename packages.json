@@ -1,0 +1,15 @@
+{
+  "name": "door-dispatch-interface",
+  "version": "1.0.0",
+  "description": "A web application for door and dispatch interfaces with real-time communication.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.1.3"
+  },
+  "author": "AndrewDavis-Andddig",
+  "license": "ISC"
+}

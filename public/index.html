@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Role</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    #container {
+      text-align: center;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 1.5em;
+      cursor: pointer;
+      margin: 10px;
+      width: 200px;
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      border-radius: 10px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container">
+    <h1>Select Your Role</h1>
+    <button onclick="location.href='dispatch.html'">Dispatch</button>
+    <button onclick="location.href='door.html'">Door</button>
+  </div>
+
+</body>
+</html>

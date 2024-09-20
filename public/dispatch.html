@@ -1,0 +1,94 @@
+<!-- public/dispatch.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dispatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 20vh;
+    }
+    button {
+      padding: 20px;
+      font-size: 1.5em;
+      cursor: pointer;
+      margin: 10px;
+    }
+    #chatBox {
+      width: 300px;
+      height: 200px;
+      border: 1px solid #000;
+      overflow-y: scroll;
+      margin: 20px auto;
+      padding: 10px;
+      text-align: left;
+    }
+    #emergencyAlert {
+      color: red;
+      font-size: 2em;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dispatch Interface</h1>
+  <button id="readyButton">Ready to Send Group</button>
+  <div id="confirmationMessage" style="display: none;">Group has been sent!</div>
+
+  <div id="emergencyAlert">EMERGENCY!</div>
+
+  <div id="chatBox"></div>
+  <input type="text" id="chatInput" placeholder="Type a message...">
+  <button id="sendChat">Send</button>
+  <p>V0.1.0</p>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const readyButton = document.getElementById('readyButton');
+    const confirmationMessage = document.getElementById('confirmationMessage');
+    const chatBox = document.getElementById('chatBox');
+    const chatInput = document.getElementById('chatInput');
+    const sendChatButton = document.getElementById('sendChat');
+    const emergencyAlert = document.getElementById('emergencyAlert');
+
+    readyButton.addEventListener('click', () => {
+      socket.emit('dispatch_ready');
+      confirmationMessage.style.display = 'none';
+      readyButton.disabled = true;
+    });
+
+    // When door side confirms group has been sent
+    socket.on('reset_screens', () => {
+      readyButton.disabled = false;
+      confirmationMessage.style.display = 'block';
+    });
+
+    // Chat function
+    sendChatButton.addEventListener('click', () => {
+      const message = `Dispatch: ${chatInput.value}`;
+      socket.emit('chat_message', message);
+      chatInput.value = '';
+    });
+
+    // Display received messages
+    socket.on('receive_message', (msg) => {
+      chatBox.innerHTML += `<p>${msg}</p>`;
+      chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll
+    });
+
+    // Emergency alert
+    socket.on('emergency_alert', () => {
+      emergencyAlert.style.display = 'block';
+    });
+
+    // Clear emergency
+    socket.on('clear_emergency', () => {
+      emergencyAlert.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
