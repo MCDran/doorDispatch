@@ -31,11 +31,31 @@
       font-size: 2em;
       display: none;
     }
+    #statusContainer {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .statusCircle {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: grey; /* Dim color */
+      margin: 5px;
+    }
+
+    .green { background-color: green; }
+    .red { background-color: red; }
   </style>
 </head>
 <body>
   <h1>Dispatch Interface</h1>
   <button id="readyButton">Ready to Send Group</button>
+  <div id="statusContainer">
+    <div id="redCircle" class="statusCircle red"></div>
+    <div id="greenCircle" class="statusCircle"></div>
+  </div>
   <div id="confirmationMessage" style="display: none;">Group has been sent!</div>
 
   <div id="emergencyAlert">EMERGENCY!</div>
@@ -54,12 +74,60 @@
     const chatInput = document.getElementById('chatInput');
     const sendChatButton = document.getElementById('sendChat');
     const emergencyAlert = document.getElementById('emergencyAlert');
+    const redCircle = document.getElementById('redCircle');
+    const greenCircle = document.getElementById('greenCircle');
 
     readyButton.addEventListener('click', () => {
       socket.emit('dispatch_ready');
       confirmationMessage.style.display = 'none';
       readyButton.disabled = true;
     });
+
+    socket.on('connect', () => {
+      socket.emit('request_status');
+    });
+
+    socket.on('state_update', (newState) => {
+  // Update client-side state based on newState
+  if (newState.isEmergencyActive !== undefined) {
+    if (newState.isEmergencyActive) {
+      emergencyAlert.style.display = 'block';
+    } else {
+      emergencyAlert.style.display = 'none';
+    }
+  }
+
+  if (newState.chatHistory !== undefined) {
+    chatBox.innerHTML = ''; // Clear existing messages
+    newState.chatHistory.forEach(msg => {
+      chatBox.innerHTML += `<p>${msg}</p>`;
+    });
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // ... handle other state updates if needed
+});
+
+    // Function to request the door status every second
+    setInterval(() => {
+      socket.emit('request_status'); // Dispatch requests the current status from the door
+    }, 1000);
+
+    // Handle door status updates and update the status lights
+    socket.on('door_status', (status) => {
+      updateStatusLights(status); // Update status lights based on the door's status
+    });
+
+    // Function to update status lights based on door status
+    function updateStatusLights(status) {
+      if (status === 'green') {
+        greenCircle.style.backgroundColor = 'green';
+        redCircle.style.backgroundColor = 'grey';
+      } else if (status === 'red') {
+        redCircle.style.backgroundColor = 'red';
+        greenCircle.style.backgroundColor = 'grey';
+      }
+    }
 
     // When door side confirms group has been sent
     socket.on('reset_screens', () => {

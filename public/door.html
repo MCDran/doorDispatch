@@ -153,6 +153,53 @@
     const messages = document.getElementById('messages');
     let chatOpen = false;
 
+    let currentStatus = 'red'; // Default status when page loads
+
+    // Notify dispatch of the current status when the page loads
+    window.onload = () => {
+      socket.emit('door_status', currentStatus);
+    };
+
+    socket.on('state_update', (newState) => {
+  // Update client-side state based on newState
+  if (newState.isGroupReady !== undefined) {
+    if (newState.isGroupReady) {
+      document.body.style.backgroundColor = '#4caf50'; // Turn green
+      doorButton.style.display = 'block';
+      doorPrompt.style.display = 'block';
+      currentStatus = 'green';
+    } else {
+      document.body.style.backgroundColor = '#ff4c4c'; // Turn red
+      doorButton.style.display = 'none';
+      doorPrompt.style.display = 'none';
+      currentStatus = 'red';
+    }
+    socket.emit('door_status', currentStatus); // Report the new status to dispatch
+  }
+
+  if (newState.isEmergencyActive !== undefined) {
+    if (newState.isEmergencyActive) {
+      emergencyButton.textContent = 'Clear Emergency';
+      // Optionally, add visual cues for the emergency state
+    } else {
+      emergencyButton.textContent = 'Emergency';
+      // Optionally, remove visual cues for the emergency state
+    }
+  }
+
+  if (newState.chatHistory !== undefined) {
+    messages.innerHTML = ''; // Clear existing messages
+    newState.chatHistory.forEach(msg => {
+      messages.innerHTML += `<p>${msg}</p>`;
+    });
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+});
+
+    socket.on('request_status', () => {
+      socket.emit('door_status', currentStatus); // Send current status to dispatch
+    });
+
     // Toggle chat box visibility and stop animation
     chatButton.addEventListener('click', () => {
       chatBox.style.display = chatBox.style.display === 'none' ? 'flex' : 'none';
@@ -168,14 +215,18 @@
     socket.on('group_ready', () => {
       document.body.style.backgroundColor = '#4caf50'; // Turn green
       doorButton.style.display = 'block';
-      doorPrompt.style.display = 'block'; // Show the prompt when ready
+      doorPrompt.style.display = 'block';
+      currentStatus = 'green'; // Update the door status
+      socket.emit('door_status', currentStatus); // Report the new status to dispatch
     });
 
     doorButton.addEventListener('click', () => {
       socket.emit('group_sent');
       document.body.style.backgroundColor = '#ff4c4c'; // Turn red
       doorButton.style.display = 'none';
-      doorPrompt.style.display = 'none'; // Hide the prompt after sending
+      doorPrompt.style.display = 'none';
+      currentStatus = 'red'; // Update the door status
+      socket.emit('door_status', currentStatus); // Report the new status to dispatch
     });
 
     // Emergency button functionality
@@ -216,7 +267,8 @@
     socket.on('reset_screens', () => {
       document.body.style.backgroundColor = '#ff4c4c'; // Reset to red
       doorButton.style.display = 'none';
-      emergencyButton.textContent = 'Emergency';  // Reset button to "Emergency"
+      currentStatus = 'red'; // Ensure the status is reset to red
+      socket.emit('door_status', currentStatus); // Notify dispatch
     });
 
     // Clear emergency
