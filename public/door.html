@@ -1,147 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Door Interface</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #ff4c4c; /* Red by default */
-      position: relative;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Door Interface</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ff4c4c; /* Red by default */
+            position: relative;
+        }
 
-    /* Emergency button at top left */
-    #emergencyButton {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      padding: 10px;
-      font-size: 1.2em;
-      color: white;
-      background-color: red;
-      border-radius: 6px;
-    }
+        /* Emergency button at top left */
+        #emergencyButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;
+            font-size: 1.2em;
+            color: white;
+            background-color: red;
+            border-radius: 6px;
+        }
 
-    /* Chat button at top right */
-    #chatButton {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 10px;
-      font-size: 1.2em;
-      border-radius: 6px;
-    }
+        /* Chat button at top right */
+        #chatButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 6px;
+        }
 
-    /* Flashing and shaking animation */
-    .flash-shake {
-      animation: flash-color 1s infinite, shake 0.5s infinite;
-    }
+        /* Flashing and shaking animation */
+        .flash-shake {
+            animation: flash-color 1s infinite, shake 0.5s infinite;
+        }
 
-    @keyframes flash-color {
-      0% { background-color: white; }
-      50% { background-color: red; }
-      100% { background-color: white; }
-    }
+        @keyframes flash-color {
+            0% {
+                background-color: white;
+            }
+            50% {
+                background-color: red;
+            }
+            100% {
+                background-color: white;
+            }
+        }
 
-    @keyframes shake {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      10% { transform: translate(-1px, -2px) rotate(-1deg); }
-      20% { transform: translate(-3px, 0px) rotate(1deg); }
-      30% { transform: translate(3px, 2px) rotate(0deg); }
-      40% { transform: translate(1px, -1px) rotate(1deg); }
-      50% { transform: translate(-1px, 2px) rotate(-1deg); }
-      60% { transform: translate(-3px, 1px) rotate(0deg); }
-      70% { transform: translate(3px, 1px) rotate(-1deg); }
-      80% { transform: translate(-1px, -1px) rotate(1deg); }
-      90% { transform: translate(1px, 2px) rotate(0deg); }
-      100% { transform: translate(1px, -2px) rotate(-1deg); }
-    }
+        @keyframes shake {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+            70% {
+                transform: translate(3px, 1px) rotate(-1deg);
+            }
+            80% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+            100% {
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+        }
 
-    /* Chat box hidden by default */
-    #chatBox {
-      position: absolute;
-      top: 50px;
-      right: 10px;
-      width: 250px;
-      height: 200px;
-      border: 1px solid #000;
-      background-color: #fff;
-      display: none; /* Hide on startup */
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-    }
+        /* Chat box hidden by default */
+        #chatBox {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            width: 250px;
+            height: 200px;
+            border: 1px solid #000;
+            background-color: #fff;
+            display: none; /* Hide on startup */
+            text-align: left;
+            flex-direction: column;
+        }
 
-    /* Messages container */
-    #messages {
-      flex: 1;
-      overflow-y: scroll;
-      padding: 10px;
-    }
+        /* Messages container */
+        #messages {
+            flex: 1;
+            overflow-y: scroll;
+            padding: 10px;
+        }
 
-    /* Input area pinned to bottom of the chatbox */
-    #chatInputContainer {
-      display: flex;
-      border-top: 1px solid #000;
-      padding: 5px;
-    }
+        /* Input area pinned to bottom of the chatbox */
+        #chatInputContainer {
+            display: flex;
+            border-top: 1px solid #000;
+            padding: 5px;
+        }
 
-    #chatInput {
-      flex: 1;
-    }
+        #chatInput {
+            flex: 1;
+        }
 
-    #sendChat {
-      padding: 5px 10px;
-    }
+        #sendChat {
+            padding: 5px 10px;
+        }
 
-    /* Center area for "Ready to send" and "Group Sent" */
-    #centerContainer {
-      text-align: center;
-    }
+        /* Center area for "Ready to send" and "Group Sent" */
+        #centerContainer {
+            text-align: center;
+        }
 
-    #doorButton {
-      padding: 20px;
-      font-size: 2em;
-      cursor: pointer;
-      display: none; /* Hidden by default */
-    }
+        #doorButton {
+            padding: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+        }
 
-    #doorPrompt {
-      display: none; /* Hide on startup */
-    }
-  </style>
+        #doorPrompt {
+            display: none; /* Hide on startup */
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Emergency button at top left -->
-  <button id="emergencyButton">Emergency</button>
+<!-- Emergency button at top left -->
+<button id="emergencyButton">Emergency</button>
 
-  <!-- Chat button at top right -->
-  <button id="chatButton">Chat</button>
+<!-- Chat button at top right -->
+<button id="chatButton">Chat</button>
 
-  <!-- Chat box at top right, toggled by chat button -->
-  <div id="chatBox">
+<!-- Chat box at top right, toggled by chat button -->
+<div id="chatBox">
     <div id="messages"></div>
     <div id="chatInputContainer">
-      <input type="text" id="chatInput" placeholder="Type a message...">
-      <button id="sendChat">Send</button>
+        <input type="text" id="chatInput" placeholder="Type a message...">
+        <button id="sendChat">Send</button>
     </div>
-  </div>
+</div>
 
-  <!-- Centered container for prompt and group button -->
-  <div id="centerContainer">
+<!-- Centered container for prompt and group button -->
+<div id="centerContainer">
     <h3 id="doorPrompt">Ready to send</h3>
     <button id="doorButton">Group Sent</button>
-  </div>
+</div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
+<script src="socket.io/client-dist/socket.io.js"></script>
+<script>
     const socket = io();
     const doorButton = document.getElementById('doorButton');
     const doorPrompt = document.getElementById('doorPrompt');
@@ -157,124 +184,128 @@
 
     // Notify dispatch of the current status when the page loads
     window.onload = () => {
-      socket.emit('door_status', currentStatus);
+        socket.emit('door_status', currentStatus);
     };
 
     socket.on('state_update', (newState) => {
-  // Update client-side state based on newState
-  if (newState.isGroupReady !== undefined) {
-    if (newState.isGroupReady) {
-      document.body.style.backgroundColor = '#4caf50'; // Turn green
-      doorButton.style.display = 'block';
-      doorPrompt.style.display = 'block';
-      currentStatus = 'green';
-    } else {
-      document.body.style.backgroundColor = '#ff4c4c'; // Turn red
-      doorButton.style.display = 'none';
-      doorPrompt.style.display = 'none';
-      currentStatus = 'red';
-    }
-    socket.emit('door_status', currentStatus); // Report the new status to dispatch
-  }
+        // Update client-side state based on newState
+        if (newState.isGroupReady !== undefined) {
+            if (newState.isGroupReady) {
+                document.body.style.backgroundColor = '#4caf50'; // Turn green
+                doorButton.style.display = 'block';
+                doorPrompt.style.display = 'block';
+                currentStatus = 'green';
+            } else {
+                document.body.style.backgroundColor = '#ff4c4c'; // Turn red
+                doorButton.style.display = 'none';
+                doorPrompt.style.display = 'none';
+                currentStatus = 'red';
+            }
+            socket.emit('door_status', currentStatus); // Report the new status to dispatch
+        }
 
-  if (newState.isEmergencyActive !== undefined) {
-    if (newState.isEmergencyActive) {
-      emergencyButton.textContent = 'Clear Emergency';
-      // Optionally, add visual cues for the emergency state
-    } else {
-      emergencyButton.textContent = 'Emergency';
-      // Optionally, remove visual cues for the emergency state
-    }
-  }
+        if (newState.isEmergencyActive !== undefined) {
+            if (newState.isEmergencyActive) {
+                emergencyButton.textContent = 'Clear Emergency';
+                // Optionally, add visual cues for the emergency state
+            } else {
+                emergencyButton.textContent = 'Emergency';
+                // Optionally, remove visual cues for the emergency state
+            }
+        }
 
-  if (newState.chatHistory !== undefined) {
-    messages.innerHTML = ''; // Clear existing messages
-    newState.chatHistory.forEach(msg => {
-      messages.innerHTML += `<p>${msg}</p>`;
+        if (newState.chatHistory !== undefined && chatOpen) {
+            messages.innerHTML = ''; // Clear existing messages
+            newState.chatHistory.forEach(msg => {
+                messages.innerHTML += `<p>${msg}</p>`;
+            });
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+        }
     });
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-});
 
     socket.on('request_status', () => {
-      socket.emit('door_status', currentStatus); // Send current status to dispatch
+        socket.emit('door_status', currentStatus); // Send current status to dispatch
     });
 
     // Toggle chat box visibility and stop animation
     chatButton.addEventListener('click', () => {
-      chatBox.style.display = chatBox.style.display === 'none' ? 'flex' : 'none';
-      if (chatBox.style.display === 'flex') {
-        chatButton.classList.remove('flash-shake');
-        chatOpen = true;
-      } else {
-        chatOpen = false;
-      }
+        chatOpen = !chatOpen; // Toggle chat state
+
+        if (chatOpen) {
+            chatBox.style.display = 'flex';
+            chatButton.classList.remove('flash-shake'); // Stop the animation
+        } else {
+            chatBox.style.display = 'none';
+        }
     });
 
     // When the dispatch says a group is ready
     socket.on('group_ready', () => {
-      document.body.style.backgroundColor = '#4caf50'; // Turn green
-      doorButton.style.display = 'block';
-      doorPrompt.style.display = 'block';
-      currentStatus = 'green'; // Update the door status
-      socket.emit('door_status', currentStatus); // Report the new status to dispatch
+        document.body.style.backgroundColor = '#4caf50'; // Turn green
+        doorButton.style.display = 'block';
+        doorPrompt.style.display = 'block';
+        currentStatus = 'green'; // Update the door status
+        socket.emit('door_status', currentStatus); // Report the new status to dispatch
     });
 
     doorButton.addEventListener('click', () => {
-      socket.emit('group_sent');
-      document.body.style.backgroundColor = '#ff4c4c'; // Turn red
-      doorButton.style.display = 'none';
-      doorPrompt.style.display = 'none';
-      currentStatus = 'red'; // Update the door status
-      socket.emit('door_status', currentStatus); // Report the new status to dispatch
+        socket.emit('group_sent');
+        document.body.style.backgroundColor = '#ff4c4c'; // Turn red
+        doorButton.style.display = 'none';
+        doorPrompt.style.display = 'none';
+        currentStatus = 'red'; // Update the door status
+        socket.emit('door_status', currentStatus); // Report the new status to dispatch
     });
 
     // Emergency button functionality
     emergencyButton.addEventListener('click', () => {
-      if (emergencyButton.textContent === 'Emergency') {
-        socket.emit('emergency_alert');
-        emergencyButton.textContent = 'Clear Emergency';
-      } else {
-        socket.emit('clear_emergency');
-        emergencyButton.textContent = 'Emergency';
-      }
+        if (emergencyButton.textContent === 'Emergency') {
+            socket.emit('emergency_alert');
+            emergencyButton.textContent = 'Clear Emergency';
+        } else {
+            socket.emit('clear_emergency');
+            emergencyButton.textContent = 'Emergency';
+        }
     });
 
     // Chat function
     sendChatButton.addEventListener('click', () => {
-      const message = `Door: ${chatInput.value}`;
-      socket.emit('chat_message', message);
-      chatInput.value = '';
+        const message = `Door: ${chatInput.value}`;
+        socket.emit('chat_message', message);
+        chatInput.value = '';
     });
 
     // Display received messages
     socket.on('receive_message', (msg) => {
-      messages.innerHTML += `<p>${msg}</p>`;
-      chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll
+        // Only add messages to the chat box if it's open
+        if (chatOpen) {
+            messages.innerHTML += `<p>${msg}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll
+        }
 
-      // Vibrate device if supported
-      if (navigator.vibrate) {
-        navigator.vibrate(200);
-      }
+        // Vibrate device if supported
+        if (navigator.vibrate) {
+            navigator.vibrate(200);
+        }
 
-      // Flash and shake chat button if chat is not opened
-      if (!chatOpen) {
-        chatButton.classList.add('flash-shake');
-      }
+        // Flash and shake chat button if chat is not opened
+        if (!chatOpen) {
+            chatButton.classList.add('flash-shake');
+        }
     });
 
     // When screens are reset
     socket.on('reset_screens', () => {
-      document.body.style.backgroundColor = '#ff4c4c'; // Reset to red
-      doorButton.style.display = 'none';
-      currentStatus = 'red'; // Ensure the status is reset to red
-      socket.emit('door_status', currentStatus); // Notify dispatch
+        document.body.style.backgroundColor = '#ff4c4c'; // Reset to red
+        doorButton.style.display = 'none';
+        currentStatus = 'red'; // Ensure the status is reset to red
+        socket.emit('door_status', currentStatus); // Notify dispatch
     });
 
     // Clear emergency
     socket.on('clear_emergency', () => {
-      emergencyButton.textContent = 'Emergency';  // Reset button to "Emergency"
+        emergencyButton.textContent = 'Emergency';  // Reset button to "Emergency"
     });
-  </script>
+</script>
 </body>
 </html>

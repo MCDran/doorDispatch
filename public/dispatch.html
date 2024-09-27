@@ -2,221 +2,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dispatch</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f4f4; /* Light grey background */
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4; /* Light grey background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    h1 {
-      margin-top: 20px;
-      color: #333;
-    }
+        h1 {
+            margin-top: 20px;
+            color: #333;
+        }
 
-    button {
-      padding: 15px 30px;
-      font-size: 1.2em;
-      cursor: pointer;
-      margin: 10px;
-      background-color: #4CAF50; /* Green */
-      color: white;
-      border: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 10px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
 
-    button:hover {
-      background-color: #3e8e41; /* Darker green */
-    }
+        button:hover {
+            background-color: #3e8e41; /* Darker green */
+        }
 
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
-    #chatBox {
-      width: 80%;
-      max-width: 400px;
-      height: 300px;
-      border: 1px solid #ccc;
-      overflow-y: scroll;
-      margin: 20px auto;
-      padding: 10px;
-      text-align: left;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
+        #chatBox {
+            width: 80%;
+            max-width: 400px;
+            height: 300px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: left;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-    #chatBox p {
-      margin: 5px 0;
-    }
+        #chatBox p {
+            margin: 5px 0;
+        }
 
-    #emergencyAlert {
-      color: red;
-      font-size: 1.5em;
-      display: none;
-      margin-top: 20px;
-    }
+        #emergencyAlert {
+            color: red;
+            font-size: 1.5em;
+            display: none;
+            margin-top: 20px;
+        }
 
-    #statusContainer {
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
-    }
+        #statusContainer {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
 
-    .statusCircle {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background-color: grey;
-      margin: 5px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
+        .statusCircle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: grey;
+            margin: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
 
-    #chatInput {
-      width: 80%;
-      max-width: 380px;
-      padding: 10px;
-      margin: 10px auto;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+        #chatInput {
+            width: 80%;
+            max-width: 380px;
+            padding: 10px;
+            margin: 10px auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-    #confirmationMessage {
-      display: none;
-      color: green;
-      margin-top: 10px;
-    }
+        #confirmationMessage {
+            display: none;
+            color: green;
+            margin-top: 10px;
+        }
 
-    p {
-      font-size: 0.9em;
-      color: #666;
-      margin-top: 20px;
-    }
+        p {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 20px;
+        }
 
-    .green { background-color: green; }
-    .red { background-color: red; }
-  </style>
+        .green {
+            background-color: green;
+        }
+
+        .red {
+            background-color: red;
+        }
+    </style>
 </head>
 <body>
-  <h1>Dispatch Interface</h1>
-  <button id="readyButton">Ready to Send Group</button>
-  <div id="statusContainer">
+<h1>Dispatch Interface</h1>
+<button id="readyButton">Ready to Send Group</button>
+<div id="statusContainer">
     <div id="redCircle" class="statusCircle red"></div>
     <div id="greenCircle" class="statusCircle"></div>
-  </div>
-  <div id="confirmationMessage" style="display: none;">Group has been sent!</div>
+</div>
+<div id="confirmationMessage" style="display: none;">Group has been sent!</div>
 
-  <div id="emergencyAlert">EMERGENCY!</div>
+<div id="emergencyAlert">EMERGENCY!</div>
 
-  <div id="chatBox"></div>
-  <input type="text" id="chatInput" placeholder="Type a message...">
-  <button id="sendChat">Send</button>
-  <p>V0.1.0</p>
+<button id="toggleChat">Toggle Chat</button>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    const readyButton = document.getElementById('readyButton');
-    const confirmationMessage = document.getElementById('confirmationMessage');
-    const chatBox = document.getElementById('chatBox');
-    const chatInput = document.getElementById('chatInput');
-    const sendChatButton = document.getElementById('sendChat');
-    const emergencyAlert = document.getElementById('emergencyAlert');
-    const redCircle = document.getElementById('redCircle');
-    const greenCircle = document.getElementById('greenCircle');
+<div id="chatBox" style="display: none;">
+    <!-- Messages container -->
+    <div id="messages"></div>
+    <!-- Input container for typing messages -->
+    <div id="chatInputContainer">
+        <input type="text" id="chatInput" placeholder="Type a message..." disabled />
+        <button id="sendChat" disabled>Send</button>
+    </div>
+</div>
 
-    readyButton.addEventListener('click', () => {
-      socket.emit('dispatch_ready');
-      confirmationMessage.style.display = 'none';
-      readyButton.disabled = true;
-    });
+    <p>V0.1.0</p>
 
-    socket.on('connect', () => {
-      socket.emit('request_status');
-    });
+    <script src="socket.io/client-dist/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const readyButton = document.getElementById('readyButton');
+        const confirmationMessage = document.getElementById('confirmationMessage');
 
-    socket.on('state_update', (newState) => {
-  // Update client-side state based on newState
-  if (newState.isEmergencyActive !== undefined) {
-    if (newState.isEmergencyActive) {
-      emergencyAlert.style.display = 'block';
-    } else {
-      emergencyAlert.style.display = 'none';
-    }
-  }
+        const chatBox = document.getElementById('chatBox');
+        const chatInput = document.getElementById('chatInput');
+        const sendChatButton = document.getElementById('sendChat');
+        const toggleChatButton = document.getElementById('toggleChat');
 
-  if (newState.chatHistory !== undefined) {
-    chatBox.innerHTML = ''; // Clear existing messages
-    newState.chatHistory.forEach(msg => {
-      chatBox.innerHTML += `<p>${msg}</p>`;
-    });
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
+        const emergencyAlert = document.getElementById('emergencyAlert');
+        const redCircle = document.getElementById('redCircle');
+        const greenCircle = document.getElementById('greenCircle');
 
-  // ... handle other state updates if needed
-});
+        let isChatBoxOpen = false;
 
-    // Function to request the door status every second
-    setInterval(() => {
-      socket.emit('request_status'); // Dispatch requests the current status from the door
-    }, 1000);
+        readyButton.addEventListener('click', () => {
+            socket.emit('dispatch_ready');
+            confirmationMessage.style.display = 'none';
+            readyButton.disabled = true;
+        });
 
-    // Handle door status updates and update the status lights
-    socket.on('door_status', (status) => {
-      updateStatusLights(status); // Update status lights based on the door's status
-    });
+        toggleChatButton.addEventListener('click', () => {
+            isChatBoxOpen = !isChatBoxOpen;
+            console.log('Toggling chat box, isChatBoxOpen:', isChatBoxOpen);
+            chatBox.style.display = isChatBoxOpen ? 'block' : 'none';
 
-    // Function to update status lights based on door status
-    function updateStatusLights(status) {
-      if (status === 'green') {
-        greenCircle.style.backgroundColor = 'green';
-        redCircle.style.backgroundColor = 'grey';
-      } else if (status === 'red') {
-        redCircle.style.backgroundColor = 'red';
-        greenCircle.style.backgroundColor = 'grey';
-      }
-    }
+            // Enable or disable chat input based on chat box visibility
+            chatInput.disabled = !isChatBoxOpen;
+            sendChatButton.disabled = !isChatBoxOpen;
+        });
 
-    // When door side confirms group has been sent
-    socket.on('reset_screens', () => {
-      readyButton.disabled = false;
-      confirmationMessage.style.display = 'block';
-    });
+        socket.on('connect', () => {
+            socket.emit('request_status');
+        });
 
-    // Chat function
-    sendChatButton.addEventListener('click', () => {
-      const message = `Dispatch: ${chatInput.value}`;
-      socket.emit('chat_message', message);
-      chatInput.value = '';
-    });
+        socket.on('state_update', (newState) => {
+            // Update client-side state based on newState
+            if (newState.isEmergencyActive !== undefined) {
+                if (newState.isEmergencyActive) {
+                    emergencyAlert.style.display = 'block';
+                } else {
+                    emergencyAlert.style.display = 'none';
+                }
+            }
 
-    // Display received messages
-    socket.on('receive_message', (msg) => {
-      chatBox.innerHTML += `<p>${msg}</p>`;
-      chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll
-    });
+            if (newState.chatHistory !== undefined) {
+                chatBox.innerHTML = ''; // Clear existing messages
+                newState.chatHistory.forEach(msg => {
+                    chatBox.innerHTML += `<p>${msg}</p>`;
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
 
-    // Emergency alert
-    socket.on('emergency_alert', () => {
-      emergencyAlert.style.display = 'block';
-    });
+            // ... handle other state updates if needed
+        });
 
-    // Clear emergency
-    socket.on('clear_emergency', () => {
-      emergencyAlert.style.display = 'none';
-    });
-  </script>
+        socket.on('receive_message', (msg) => {
+            // Only add messages if the chat box is open
+            if (isChatBoxOpen) {
+                chatBox.innerHTML += `<p>${msg}</p>`;
+                chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll
+            }
+        });
+
+        // Function to request the door status every second
+        setInterval(() => {
+            socket.emit('request_status'); // Dispatch requests the current status from the door
+        }, 1000);
+
+        // Handle door status updates and update the status lights
+        socket.on('door_status', (status) => {
+            updateStatusLights(status); // Update status lights based on the door's status
+        });
+
+        // Function to update status lights based on door status
+        function updateStatusLights(status) {
+            if (status === 'green') {
+                greenCircle.style.backgroundColor = 'green';
+                redCircle.style.backgroundColor = 'grey';
+            } else if (status === 'red') {
+                redCircle.style.backgroundColor = 'red';
+                greenCircle.style.backgroundColor = 'grey';
+            }
+        }
+
+        // When door side confirms group has been sent
+        socket.on('reset_screens', () => {
+            readyButton.disabled = false;
+            confirmationMessage.style.display = 'block';
+        });
+
+        // Chat function
+        sendChatButton.addEventListener('click', () => {
+            const message = `Dispatch: ${chatInput.value}`;
+            socket.emit('chat_message', message);
+            chatInput.value = '';
+        });
+
+        // Display received messages
+        socket.on('receive_message', (msg) => {
+            chatBox.innerHTML += `<p>${msg}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll
+        });
+
+        // Emergency alert
+        socket.on('emergency_alert', () => {
+            emergencyAlert.style.display = 'block';
+        });
+
+        // Clear emergency
+        socket.on('clear_emergency', () => {
+            emergencyAlert.style.display = 'none';
+        });
+    </script>
 </body>
 </html>
