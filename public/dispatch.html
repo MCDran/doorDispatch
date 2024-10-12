@@ -1,118 +1,11 @@
 <!-- public/dispatch.html -->
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="./css/global.css">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispatch</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4; /* Light grey background */
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        h1 {
-            margin-top: 20px;
-            color: #333;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            cursor: pointer;
-            margin: 10px;
-            background-color: #4CAF50; /* Green */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #3e8e41; /* Darker green */
-        }
-
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        #chatBox {
-            width: 80%;
-            max-width: 400px;
-            height: 300px;
-            border: 1px solid #ccc;
-            overflow-y: scroll;
-            margin: 20px auto;
-            padding: 10px;
-            text-align: left;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        #chatBox p {
-            margin: 5px 0;
-        }
-
-        #emergencyAlert {
-            color: red;
-            font-size: 1.5em;
-            display: none;
-            margin-top: 20px;
-        }
-
-        #statusContainer {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .statusCircle {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: grey;
-            margin: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        #chatInput {
-            width: 80%;
-            max-width: 380px;
-            padding: 10px;
-            margin: 10px auto;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        #confirmationMessage {
-            display: none;
-            color: green;
-            margin-top: 10px;
-        }
-
-        p {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 20px;
-        }
-
-        .green {
-            background-color: green;
-        }
-
-        .red {
-            background-color: red;
-        }
-    </style>
 </head>
 <body>
 <h1>Dispatch Interface</h1>
@@ -132,44 +25,31 @@
     <div id="messages"></div>
     <!-- Input container for typing messages -->
     <div id="chatInputContainer">
-        <input type="text" id="chatInput" placeholder="Type a message..." disabled />
-        <button id="sendChat" disabled>Send</button>
+        <label for="chatInput"></label><input type="text" id="chatInput" placeholder="Type a message..." disabled/>
+        <button class="sendButton" id="sendChat" disabled>Send</button>
     </div>
 </div>
 
     <p>V0.1.0</p>
 
     <script src="socket.io/client-dist/socket.io.js"></script>
+    <script type="module" src="/js/chat.js">
+        import { initChat } from './js/chat.js';
+        initChat('chatButton', 'chatBox', 'sendChat', 'chatInput', 'messages')
+    </script>
     <script>
         const socket = io();
         const readyButton = document.getElementById('readyButton');
         const confirmationMessage = document.getElementById('confirmationMessage');
 
-        const chatBox = document.getElementById('chatBox');
-        const chatInput = document.getElementById('chatInput');
-        const sendChatButton = document.getElementById('sendChat');
-        const toggleChatButton = document.getElementById('toggleChat');
-
         const emergencyAlert = document.getElementById('emergencyAlert');
         const redCircle = document.getElementById('redCircle');
         const greenCircle = document.getElementById('greenCircle');
-
-        let isChatBoxOpen = false;
 
         readyButton.addEventListener('click', () => {
             socket.emit('dispatch_ready');
             confirmationMessage.style.display = 'none';
             readyButton.disabled = true;
-        });
-
-        toggleChatButton.addEventListener('click', () => {
-            isChatBoxOpen = !isChatBoxOpen;
-            console.log('Toggling chat box, isChatBoxOpen:', isChatBoxOpen);
-            chatBox.style.display = isChatBoxOpen ? 'block' : 'none';
-
-            // Enable or disable chat input based on chat box visibility
-            chatInput.disabled = !isChatBoxOpen;
-            sendChatButton.disabled = !isChatBoxOpen;
         });
 
         socket.on('connect', () => {
@@ -185,24 +65,7 @@
                     emergencyAlert.style.display = 'none';
                 }
             }
-
-            if (newState.chatHistory !== undefined) {
-                chatBox.innerHTML = ''; // Clear existing messages
-                newState.chatHistory.forEach(msg => {
-                    chatBox.innerHTML += `<p>${msg}</p>`;
-                });
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-
             // ... handle other state updates if needed
-        });
-
-        socket.on('receive_message', (msg) => {
-            // Only add messages if the chat box is open
-            if (isChatBoxOpen) {
-                chatBox.innerHTML += `<p>${msg}</p>`;
-                chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll
-            }
         });
 
         // Function to request the door status every second
@@ -230,19 +93,6 @@
         socket.on('reset_screens', () => {
             readyButton.disabled = false;
             confirmationMessage.style.display = 'block';
-        });
-
-        // Chat function
-        sendChatButton.addEventListener('click', () => {
-            const message = `Dispatch: ${chatInput.value}`;
-            socket.emit('chat_message', message);
-            chatInput.value = '';
-        });
-
-        // Display received messages
-        socket.on('receive_message', (msg) => {
-            chatBox.innerHTML += `<p>${msg}</p>`;
-            chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll
         });
 
         // Emergency alert

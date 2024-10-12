@@ -19,10 +19,10 @@ let state = {
 };
 
 // WebSocket connection handling
-io.on('connection', (socket) => {
+    io.on('connection', (socket) => {
     console.log('A user connected');
 
-    // Emit current state when a new user connects
+    /* Emit current state when a new user connects
     socket.emit('state_update', state);
 
     socket.on('request_status', () => {
@@ -42,11 +42,12 @@ io.on('connection', (socket) => {
         io.emit('state_update', { isGroupReady: false });
     });
 
-    // Chat function
+    */
+
+    //Chat function
     socket.on('chat_message', (msg) => {
         state.chatHistory.push(msg);
         io.emit('receive_message', msg);
-        io.emit('state_update', { chatHistory: state.chatHistory }); // Broadcast state change
     });
 
     // Emergency alert event
@@ -66,6 +67,11 @@ io.on('connection', (socket) => {
     // Handle user disconnect
     socket.on('disconnect', () => {
         console.log('A user disconnected');
+    });
+
+    // General error handling for socket events
+    socket.on('error', (err) => {
+        console.error('Socket error:', err);
     });
 });
 

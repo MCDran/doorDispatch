@@ -1,0 +1,185 @@
+/* global.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 10px;
+    color: white;
+}
+
+/* global styles */
+body {
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    background-color: #333333; /* Light grey background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+h1 {
+    margin-top: 20px;
+    color: #f0f0f0;
+}
+
+/* containers */
+
+.centerContainer {
+    justify-content: space-around;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatContainer {
+    position: absolute;
+    top: calc(5vh + 1em);
+    right: calc(0vw + 1em);
+    display: grid;
+    grid-template-columns: 30vw;
+    grid-template-rows: 40vh 1vh;
+    height: auto;
+}
+
+.chatInputContainer {
+    display: block;
+    flex-direction: row;
+    margin-top: 2.5em;
+    z-index: 2;
+    grid-row:2/2;
+    align-self: center;
+}
+
+.headerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    padding: 0.5em;
+}
+
+/* button styles */
+
+button {
+    background-color: dimgray;
+    border: none;
+    border-radius: 0.5em;
+    height: 5vh;
+    width: 10vw;
+    padding: 0.5em;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.emerButton {
+    background-color: red;
+}
+
+.sendButton {
+    vertical-align: center;
+}
+
+button:hover {
+    background-color: darkslategray; /* Darker green for hover */
+}
+
+button:disabled {
+    color: red;
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* chat styles */
+
+#chatBox {
+    display: block;
+    width: 30vw;
+    height: 40vh;
+    position: absolute;
+    grid-row: 1/2;
+    border: 1px solid #ccc;
+    padding: 1em;
+    margin-bottom: 2em;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow-y: scroll;
+    text-align: left;
+    z-index: 1;
+}
+
+#chatInput {
+    flex: auto;
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 5vh;
+    z-index: 3;
+}
+
+#messagesDiv {
+    overflow-y: scroll;
+    background-color: #f0f0f0;
+    height: 10em;
+    padding: 10px;
+}
+
+/* Flashing and shaking animation */
+.flash-shake {
+    animation: flash-color 1s infinite, shake 0.5s infinite;
+}
+
+@keyframes flash-color {
+    0% {
+        background-color: white;
+    }
+    50% {
+        background-color: red;
+    }
+    100% {
+        background-color: white;
+    }
+}
+
+@keyframes shake {
+    0% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+    }
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+    40% {
+        transform: translate(1px, -1px) rotate(1deg);
+    }
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+    }
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+    }
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+    90% {
+        transform: translate(1px, 2px) rotate(0deg);
+    }
+    100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+    }
+}
